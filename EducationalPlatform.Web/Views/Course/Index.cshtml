@@ -1,0 +1,85 @@
+@model CourseListViewModel
+@{
+    ViewData["Title"] = "Courses";
+}
+
+<section class="section-top">
+    <div class="container">
+        <div class="col-lg-10 offset-lg-1 text-center">
+            <div class="section-top-title">
+                <h1>Our Courses</h1>
+                <ul>
+                    <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li> / Course</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="course_area section-padding">
+    <div class="container">
+
+        <!-- Search / Filter bar -->
+        <form asp-controller="Course" asp-action="Index" method="get" class="row g-3 align-items-end mb-5">
+            <div class="col-lg-4 col-md-6">
+                <label class="form-label">Search</label>
+                <input type="text" name="SearchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Search courses...">
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <label class="form-label">Category</label>
+                <select name="CategoryId" class="form-select" asp-items="@(new SelectList(Model.Categories, "Id", "Name", Model.CategoryId))">
+                    <option value="">All Categories</option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label">Sort By</label>
+                <select name="SortBy" class="form-select">
+                    <option value="newest" selected="@(Model.SortBy == "newest" || string.IsNullOrEmpty(Model.SortBy) ? "selected" : null)">Newest</option>
+                    <option value="price_asc" selected="@(Model.SortBy == "price_asc" ? "selected" : null)">Price: Low to High</option>
+                    <option value="price_desc" selected="@(Model.SortBy == "price_desc" ? "selected" : null)">Price: High to Low</option>
+                    <option value="rating" selected="@(Model.SortBy == "rating" ? "selected" : null)">Highest Rated</option>
+                </select>
+            </div>
+            <div class="col-lg-3 col-md-6 d-flex gap-2">
+                <button type="submit" class="btn_one w-100">Filter</button>
+                <a asp-controller="Course" asp-action="Index" class="btn_two w-100 text-center">Reset</a>
+            </div>
+        </form>
+
+        <div class="row">
+            @if (Model.Courses.Any())
+            {
+                foreach (var course in Model.Courses)
+                {
+                    @await Html.PartialAsync("Partials/_CourseCard", course)
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center">
+                    <p>No courses matched your search. Try different filters.</p>
+                </div>
+            }
+        </div>
+
+        @if (Model.TotalPages > 1)
+        {
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    @for (var p = 1; p <= Model.TotalPages; p++)
+                    {
+                        <li class="page-item @(p == Model.Page ? "active" : "")">
+                            <a class="page-link"
+                               asp-controller="Course" asp-action="Index"
+                               asp-route-Page="@p"
+                               asp-route-SearchTerm="@Model.SearchTerm"
+                               asp-route-CategoryId="@Model.CategoryId"
+                               asp-route-SortBy="@Model.SortBy">@p</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    </div>
+</section>

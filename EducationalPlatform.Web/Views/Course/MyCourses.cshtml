@@ -1,0 +1,71 @@
+@model List<CourseListItemViewModel>
+@{
+    ViewData["Title"] = "My Courses";
+}
+
+<section class="section-top">
+    <div class="container">
+        <div class="col-lg-10 offset-lg-1 text-center">
+            <div class="section-top-title">
+                <h1>My Courses</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="mb-0">@Model.Count Course(s)</h4>
+            <a asp-controller="Course" asp-action="Create" class="btn_one">+ Create New Course</a>
+        </div>
+
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Lessons</th>
+                            <th>Enrolled</th>
+                            <th>Rating</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var course in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="@(string.IsNullOrEmpty(course.ImageUrl) ? "/assets/img/course/1.png" : course.ImageUrl)" width="50" height="40" style="object-fit:cover;" class="me-2 rounded" alt="@course.Title" />
+                                    @course.Title
+                                </td>
+                                <td>@course.CategoryName</td>
+                                <td>@(course.Price == 0 ? "Free" : $"${course.Price:0}")</td>
+                                <td>@course.LessonCount</td>
+                                <td>@course.EnrollmentCount</td>
+                                <td>@course.AverageRating.ToString("0.0")</td>
+                                <td class="text-nowrap">
+                                    <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id" class="btn btn-sm btn-outline-secondary">View</a>
+                                    <a asp-controller="Course" asp-action="Edit" asp-route-id="@course.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <a asp-controller="Lesson" asp-action="Index" asp-route-courseId="@course.Id" class="btn btn-sm btn-outline-info">Lessons</a>
+                                    <a asp-controller="Enrollment" asp-action="CourseStudents" asp-route-courseId="@course.Id" class="btn btn-sm btn-outline-success">Students</a>
+                                    <form asp-controller="Course" asp-action="Delete" asp-route-id="@course.Id" method="post" class="d-inline" onsubmit="return confirm('Delete this course? This cannot be undone.');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p>You haven't created any courses yet.</p>
+        }
+    </div>
+</section>

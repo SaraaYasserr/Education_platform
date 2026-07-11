@@ -1,0 +1,109 @@
+@model PricingPageViewModel
+@{
+    ViewData["Title"] = "Pricing Plans";
+}
+
+<section class="section-top">
+    <div class="container">
+        <div class="col-lg-10 offset-lg-1 text-center">
+            <div class="section-top-title">
+                <h1>Pricing Plan</h1>
+                <ul>
+                    <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li> / Pricing</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model.CurrentUserActivePlan != null)
+{
+    <div class="container mt-4">
+        <div class="alert alert-info text-center">
+            You're currently subscribed to the <strong>@Model.CurrentUserActivePlan.Name</strong> plan.
+        </div>
+    </div>
+}
+
+<section id="pricing" class="pricing-content section-padding">
+    <div class="container">
+        <div class="row text-center">
+            @foreach (var plan in Model.Plans)
+            {
+                var isFeatured = plan.IsFeatured;
+                var isCurrentPlan = Model.CurrentUserActivePlan != null && Model.CurrentUserActivePlan.Id == plan.Id;
+
+                <div class="col-lg-4 col-sm-4 col-xs-12">
+                    <div class="single-pricing @(isFeatured ? "single-pricing-white" : "")">
+                        <div class="price-head">
+                            <h2>@plan.Name</h2>
+                            <span></span><span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                        @if (isFeatured)
+                        {
+                            <span class="price-label">Best</span>
+                        }
+                        <h1 class="price">@(plan.Price == 0 ? "Free" : $"${plan.Price:0}")</h1>
+                        <h5>Every @plan.DurationInDays days</h5>
+                        <ul>
+                            @if (!string.IsNullOrEmpty(plan.Features))
+                            {
+                                foreach (var feature in plan.Features.Split('\n', StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    <li>@feature.Trim()</li>
+                                }
+                            }
+                        </ul>
+
+                        @if (isCurrentPlan)
+                        {
+                            <span class="btn_one">Current Plan</span>
+                        }
+                        else if (User.Identity?.IsAuthenticated == true)
+                        {
+                            if (plan.Price == 0)
+                            {
+                                <form asp-controller="Membership"
+                                      asp-action="Subscribe"
+                                      method="post">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="planId"
+                                           value="@plan.Id" />
+
+                                    <button type="submit" class="btn_one">
+                                        Start for Free
+                                    </button>
+
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-controller="Payment"
+                                      asp-action="Checkout"
+                                      method="get">
+
+                                    <input type="hidden"
+                                           name="planId"
+                                           value="@plan.Id" />
+
+                                    <button type="submit" class="btn_one">
+                                        Get Started
+                                    </button>
+
+                                </form>
+                            }
+                        }
+                        else
+                        {
+                            <a class="btn_one" asp-controller="Account" asp-action="Login">Sign In to Subscribe</a>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

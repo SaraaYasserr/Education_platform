@@ -1,0 +1,64 @@
+@model EducationalPlatform.Models.ViewModels.Certificate.CertificateViewModel
+@{
+    ViewData["Title"] = "Certificate of Completion";
+    Layout = "_Layout";
+}
+
+<style>
+    .certificate-wrap { padding: 40px 0; background: #f4f4f6; }
+    .certificate-card {
+        max-width: 900px;
+        margin: 0 auto;
+        background: #fffdf8;
+        border: 10px solid #142850;
+        outline: 2px solid #d4af37;
+        outline-offset: -18px;
+        padding: 60px 50px;
+        text-align: center;
+        position: relative;
+        font-family: Georgia, 'Times New Roman', serif;
+    }
+    .certificate-card h1 { color: #142850; letter-spacing: 3px; font-size: 2.4rem; margin-bottom: 0; }
+    .certificate-card .sub { color: #9a7d1a; letter-spacing: 4px; font-size: .9rem; text-transform: uppercase; margin-bottom: 30px; }
+    .certificate-card .student-name { font-size: 2.2rem; color: #111; margin: 20px 0 6px; font-weight: bold; border-bottom: 2px solid #d4af37; display: inline-block; padding-bottom: 8px; }
+    .certificate-card .course-title { font-size: 1.4rem; color: #142850; font-style: italic; margin: 14px 0 30px; }
+    .certificate-footer { display: flex; justify-content: space-between; margin-top: 50px; font-size: .95rem; color: #444; }
+    .certificate-footer div { text-align: center; min-width: 200px; }
+    .certificate-footer .line { border-top: 1px solid #999; margin-top: 30px; padding-top: 6px; }
+    .certificate-code { margin-top: 30px; font-size: .8rem; color: #999; letter-spacing: 1px; }
+    @@media print {
+        .no-print { display: none !important; }
+        .certificate-wrap { background: #fff; padding: 0; }
+        .certificate-card { border: 10px solid #142850; box-shadow: none; }
+    }
+</style>
+
+<div class="certificate-wrap">
+    <div class="text-center mb-4 no-print">
+        <button class="btn_one" onclick="window.print()">🖨️ Print / Save as PDF</button>
+        <a asp-controller="Course" asp-action="Details" asp-route-id="@Model.CourseId" class="btn_two ms-2">&larr; Back to Course</a>
+    </div>
+
+    <div class="certificate-card">
+        <div class="sub">Certificate of Completion</div>
+        <h1>EduPlatform</h1>
+        <p class="mt-4 mb-0">This certifies that</p>
+        <div class="student-name">@Model.StudentName</div>
+        <p class="mb-0">has successfully completed the course</p>
+        <div class="course-title">"@Model.CourseTitle"</div>
+        <p>(@Model.DurationMinutes minutes of course content)</p>
+
+        <div class="certificate-footer">
+            <div>
+                <div>@Model.IssuedAt.ToString("MMMM dd, yyyy")</div>
+                <div class="line">Date Issued</div>
+            </div>
+            <div>
+                <div>@Model.InstructorName</div>
+                <div class="line">Instructor</div>
+            </div>
+        </div>
+
+        <div class="certificate-code">Certificate Code: @Model.CertificateCode &nbsp;•&nbsp; Verify at /Certificate/Verify?code=@Model.CertificateCode</div>
+    </div>
+</div>

@@ -1,0 +1,244 @@
+@using Microsoft.AspNetCore.Identity
+@using EducationalPlatform.Models.Entities
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Educational Platform - Learn new skills online">
+    <title>@ViewData["Title"] - Educational Platform</title>
+
+    <link rel="stylesheet" href="~/assets/bootstrap/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="~/assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="~/assets/fonts/themify-icons.css">
+    <link rel="stylesheet" href="~/assets/owlcarousel/css/owl.carousel.css">
+    <link rel="stylesheet" href="~/assets/owlcarousel/css/owl.theme.css">
+    <link rel="stylesheet" href="~/assets/css/jquery-simple-mobilemenu.css">
+    <link rel="stylesheet" href="~/assets/css/magnific-popup.css">
+    <link rel="stylesheet" href="~/assets/css/animate.css">
+    <link rel="stylesheet" href="~/assets/css/style.css">
+    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+
+<body data-spy="scroll" data-offset="80">
+
+
+
+    <!-- START NAVBAR -->
+    <div id="navigation" class="navbar-light bg-faded site-navigation">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-20 align-self-center">
+                    <div class="site-logo">
+                        <a asp-controller="Home" asp-action="Index"><img src="~/assets/img/logo2.png" alt="Educational Platform logo"></a>
+                    </div>
+                </div>
+
+                <div class="col-60 d-flex">
+                    <nav id="main-menu">
+                        <ul>
+                            <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                            <li><a asp-controller="Home" asp-action="About">About</a></li>
+                            <li><a asp-controller="Course" asp-action="Index">Course</a></li>
+                            <li class="menu-item-has-children">
+                                <a href="#">Pages</a>
+                                <ul>
+                                    <li><a asp-controller="Instructor" asp-action="Index">Instructor</a></li>
+                                    <li><a asp-controller="Membership" asp-action="Pricing">Pricing Plan</a></li>
+                                    <li><a asp-controller="Home" asp-action="Faq">Faq Page</a></li>
+                                </ul>
+                            </li>
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                <li class="menu-item-has-children">
+                                    <a href="#">Dashboard</a>
+                                    <ul>
+                                        @if (User.IsInRole(Roles.Admin))
+                                        {
+                                            <li><a asp-controller="Dashboard" asp-action="Admin">Admin Dashboard</a></li>
+                                        }
+                                        @if (User.IsInRole(Roles.Instructor))
+                                        {
+                                            <li><a asp-controller="Dashboard" asp-action="Instructor">Instructor Dashboard</a></li>
+                                        }
+                                        @if (User.IsInRole(Roles.Student))
+                                        {
+                                            <li><a asp-controller="Dashboard" asp-action="Student">My Dashboard</a></li>
+                                            <li><a asp-controller="Enrollment" asp-action="MyCourses">My Courses</a></li>
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                            <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="col-20 d-none d-xl-block text-end align-self-center">
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <a asp-controller="Account" asp-action="Profile" class="header-btn">@UserManager.GetUserName(User)</a>
+                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                            <button type="submit" class="btn_one">Sign Out</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" class="header-btn">Sign In</a>
+                        <a asp-controller="Account" asp-action="Register" class="btn_one">Sign Up</a>
+                    }
+                </div>
+
+                <ul class="mobile_menu">
+                    <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li><a asp-controller="Home" asp-action="About">About</a></li>
+                    <li>
+                        <a href="#">Course</a>
+                        <ul class="sub-menu">
+                            <li><a asp-controller="Course" asp-action="Index">All Courses</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Pages</a>
+                        <ul class="sub-menu">
+                            <li><a asp-controller="Instructor" asp-action="Index">Instructor</a></li>
+                            <li><a asp-controller="Membership" asp-action="Pricing">Pricing Plan</a></li>
+                            <li><a asp-controller="Home" asp-action="Faq">Faq Page</a></li>
+                        </ul>
+                    </li>
+                    <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <li><a asp-controller="Account" asp-action="Profile">My Profile</a></li>
+                    }
+                    else
+                    {
+                        <li><a asp-controller="Account" asp-action="Login">Sign In</a></li>
+                        <li><a asp-controller="Account" asp-action="Register">Sign Up</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- END NAVBAR -->
+    @if (TempData["SuccessMessage"] != null || TempData["ErrorMessage"] != null)
+    {
+        <div class="container mt-3">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+        </div>
+    }
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <!-- START FOOTER -->
+    <div class="footer section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-sm-6 col-xs-12">
+                    <div class="single_footer">
+                        <a asp-controller="Home" asp-action="Index"><h4>EduHub</h4></a>
+                        <p>A simple, modern educational platform built to help students learn and instructors teach online.</p>
+                        <div class="social_profile">
+                            <ul>
+                                <li><a class="f_facebook" href="#"><i class="fa-brands fa-x-twitter"></i></a></li>
+                                <li><a class="f_twitter" href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
+                                <li><a class="f_instagram" href="#"><i class="fa-brands fa-instagram"></i></a></li>
+                                <li><a class="f_linkedin" href="#"><i class="fa-brands fa-linkedin-in"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-6 col-xs-12">
+                    <div class="single_footer">
+                        <h4>About Us</h4>
+                        <ul>
+                            <li><a asp-controller="Home" asp-action="About">About us</a></li>
+                            <li><a asp-controller="Account" asp-action="Register">Become An Instructor</a></li>
+                            <li><a asp-controller="Instructor" asp-action="Index">All Instructors</a></li>
+                            <li><a asp-controller="Home" asp-action="Faq">FAQ</a></li>
+                            <li><a asp-controller="Home" asp-action="Contact">Contact us</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-6 col-xs-12">
+                    <div class="single_footer">
+                        <h4>Popular Courses</h4>
+                        <ul>
+                            <li><a asp-controller="Course" asp-action="Index">All Courses</a></li>
+                            <li><a asp-controller="Membership" asp-action="Pricing">Membership Plans</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-xs-12">
+                    <div class="single_footer">
+                        <h4>Contact Info</h4>
+                        <div class="sf_contact">
+                            <span class="ti-map"></span>
+                            <p>Egypt, Cairo</p>
+                        </div>
+                        <div class="sf_contact">
+                            <span class="ti-mobile"></span>
+                            <p>01096039548</p>
+                        </div>
+                        <div class="sf_contact">
+                            <span class="ti-email"></span>
+                            <p>engradwaabdelmonem@gmail.com</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-6 col-xs-12">
+                    <div class="single_footer">
+                        <h4>Graduation Project</h4>
+                        <p>Built with ASP.NET Core MVC, EF Core, and ASP.NET Identity.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END FOOTER -->
+
+    <div class="foot_copy">
+        <div class="footer_copyright">
+            <p>&copy; @DateTime.Now.Year Educational Platform. All Rights Reserved.</p>
+        </div>
+    </div>
+
+    <script src="~/assets/js/jquery-1.12.4.min.js"></script>
+    <script src="~/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/assets/js/modernizr-2.8.3.min.js"></script>
+    <script src="~/assets/js/jquery-simple-mobilemenu.js"></script>
+    <script src="~/assets/owlcarousel/js/owl.carousel.min.js"></script>
+    <script src="~/assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/assets/js/jquery.inview.min.js"></script>
+    <script src="~/assets/js/scrolltopcontrol.js"></script>
+    <script src="~/assets/js/wow.min.js"></script>
+    <script src="~/assets/js/scripts.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

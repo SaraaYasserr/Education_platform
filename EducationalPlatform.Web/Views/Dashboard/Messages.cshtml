@@ -1,0 +1,52 @@
+@model List<ContactMessageListItemViewModel>
+@{
+    ViewData["Title"] = "Contact Messages";
+}
+
+<section class="section-top">
+    <div class="container">
+        <div class="col-lg-10 offset-lg-1 text-center">
+            <div class="section-top-title">
+                <h1>Contact Messages</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <h4 class="mb-4">@Model.Count Message(s)</h4>
+
+        @if (Model.Any())
+        {
+            <div class="accordion" id="messagesAccordion">
+                @foreach (var msg in Model)
+                {
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#msg@(msg.Id)">
+                                @(msg.IsRead ? "" : "🔵 ") @msg.Subject &mdash; <span class="text-muted ms-2">@msg.Name (@msg.Email)</span>
+                            </button>
+                        </h2>
+                        <div id="msg@(msg.Id)" class="accordion-collapse collapse" data-bs-parent="#messagesAccordion">
+                            <div class="accordion-body">
+                                <p>@msg.Message</p>
+                                <p class="text-muted small">Sent: @msg.SentAt.ToString("MMM dd, yyyy HH:mm")</p>
+                                @if (!msg.IsRead)
+                                {
+                                    <form asp-controller="Dashboard" asp-action="MarkMessageRead" asp-route-id="@msg.Id" method="post">
+                                        <button type="submit" class="btn btn-sm btn-outline-primary">Mark as Read</button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p>No messages received yet.</p>
+        }
+    </div>
+</section>

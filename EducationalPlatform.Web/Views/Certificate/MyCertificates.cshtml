@@ -1,0 +1,40 @@
+@model List<EducationalPlatform.Models.ViewModels.Certificate.CertificateViewModel>
+@{
+    ViewData["Title"] = "My Certificates";
+}
+
+<section class="section-top">
+    <div class="container">
+        <div class="col-lg-10 offset-lg-1 text-center">
+            <div class="section-top-title">
+                <h1>My Certificates</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        @if (Model.Any())
+        {
+            <div class="row">
+                @foreach (var cert in Model)
+                {
+                    <div class="col-lg-4 col-sm-6 col-xs-12 mb-4">
+                        <div class="single_course text-center p-4">
+                            <div class="mb-2" style="font-size:2.2rem;">🏆</div>
+                            <h5>@cert.CourseTitle</h5>
+                            <p class="text-muted small mb-1">Issued @cert.IssuedAt.ToString("MMM dd, yyyy")</p>
+                            <a asp-controller="Certificate" asp-action="View" asp-route-courseId="@cert.CourseId" class="btn_one mt-2">View Certificate</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p>You haven't earned any certificates yet. Complete all the lessons in a course to earn one!</p>
+            <a asp-controller="Enrollment" asp-action="MyCourses" class="btn_one">Go to My Courses</a>
+        }
+    </div>
+</section>

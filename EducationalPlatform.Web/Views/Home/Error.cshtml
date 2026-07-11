@@ -1,0 +1,25 @@
+@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<section class="section-top">
+    <div class="container">
+        <div class="col-lg-10 offset-lg-1 text-center">
+            <div class="section-top-title">
+                <h1>@(Model.StatusCode.HasValue ? $"Error {Model.StatusCode}" : "Error")</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="error_page section-padding text-center">
+    <div class="container">
+        <h2>@Model.Message</h2>
+        @if (Model.ShowRequestId)
+        {
+            <p class="text-muted">Request ID: <code>@Model.RequestId</code></p>
+        }
+        <a asp-controller="Home" asp-action="Index" class="btn_one mt-3">Back to Home</a>
+    </div>
+</section>

@@ -1,0 +1,64 @@
+@model List<LessonViewModel>
+@{
+    ViewData["Title"] = "Manage Lessons";
+    var courseId = (int)ViewBag.CourseId;
+}
+
+<section class="section-top">
+    <div class="container">
+        <div class="col-lg-10 offset-lg-1 text-center">
+            <div class="section-top-title">
+                <h1>Lessons @(Model.Any() ? $"- {Model.First().CourseTitle}" : "")</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a asp-controller="Course" asp-action="Edit" asp-route-id="@courseId" class="btn_two">&larr; Back to Course</a>
+            <a asp-controller="Lesson" asp-action="Create" asp-route-courseId="@courseId" class="btn_one">+ Add Lesson</a>
+        </div>
+
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Duration</th>
+                            <th>Has Video</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var lesson in Model.OrderBy(l => l.LessonOrder))
+                        {
+                            <tr>
+                                <td>@lesson.LessonOrder</td>
+                                <td>@lesson.Title</td>
+                                <td>@lesson.DurationMinutes min</td>
+                                <td>@(string.IsNullOrEmpty(lesson.VideoUrl) ? "No" : "Yes")</td>
+                                <td>
+                                    <a asp-controller="Lesson" asp-action="Edit" asp-route-id="@lesson.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <form asp-controller="Lesson" asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('Delete this lesson?');">
+                                        <input type="hidden" name="id" value="@lesson.Id" />
+                                        <input type="hidden" name="courseId" value="@courseId" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p>No lessons added to this course yet.</p>
+        }
+    </div>
+</section>

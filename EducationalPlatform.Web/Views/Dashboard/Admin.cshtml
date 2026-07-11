@@ -1,0 +1,129 @@
+@model AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<section class="section-top">
+    <div class="container">
+        <div class="col-lg-10 offset-lg-1 text-center">
+            <div class="section-top-title">
+                <h1>Admin Dashboard</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-3 col-sm-6">
+                <div class="dashboard-stat-card">
+                    <h3>@Model.TotalUsers</h3>
+                    <span>Total Users</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="dashboard-stat-card">
+                    <h3>@Model.TotalCourses</h3>
+                    <span>Total Courses</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="dashboard-stat-card">
+                    <h3>@Model.TotalEnrollments</h3>
+                    <span>Total Enrollments</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="dashboard-stat-card">
+                    <h3>$@Model.TotalRevenue.ToString("0")</h3>
+                    <span>Total Revenue</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3 col-sm-6">
+                <div class="dashboard-stat-card">
+                    <h3>@Model.TotalStudents</h3>
+                    <span>Students</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="dashboard-stat-card">
+                    <h3>@Model.TotalInstructors</h3>
+                    <span>Instructors</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="dashboard-stat-card">
+                    <h3>@Model.TotalCategories</h3>
+                    <span>Categories</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="dashboard-stat-card">
+                    <h3>@Model.UnreadContactMessages</h3>
+                    <span>Unread Messages</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap mb-4">
+            <a asp-controller="Category" asp-action="Index" class="btn_one">Manage Categories</a>
+            <a asp-controller="Dashboard" asp-action="Users" class="btn_two">Manage Users</a>
+            <a asp-controller="Dashboard" asp-action="Messages" class="btn_two">Contact Messages</a>
+            <a asp-controller="Membership" asp-action="ManagePlans" class="btn_two">Manage Plans</a>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <h4>Top Courses</h4>
+                @if (Model.TopCourses.Any())
+                {
+                    <table class="table">
+                        <thead><tr><th>Course</th><th>Enrolled</th><th>Rating</th></tr></thead>
+                        <tbody>
+                            @foreach (var c in Model.TopCourses)
+                            {
+                                <tr>
+                                    <td><a asp-controller="Course" asp-action="Details" asp-route-id="@c.CourseId">@c.Title</a></td>
+                                    <td>@c.EnrollmentCount</td>
+                                    <td>@c.AverageRating.ToString("0.0")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p class="text-muted">No courses yet.</p>
+                }
+            </div>
+            <div class="col-lg-6">
+                <h4>Recent Enrollments</h4>
+                @if (Model.RecentEnrollments.Any())
+                {
+                    <table class="table">
+                        <thead><tr><th>Student</th><th>Course</th><th>Date</th></tr></thead>
+                        <tbody>
+                            @foreach (var e in Model.RecentEnrollments)
+                            {
+                                <tr>
+                                    <td>@e.StudentName</td>
+                                    <td>@e.CourseTitle</td>
+                                    <td>@e.EnrollmentDate.ToString("MMM dd")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p class="text-muted">No enrollments yet.</p>
+                }
+            </div>
+        </div>
+    </div>
+</section>

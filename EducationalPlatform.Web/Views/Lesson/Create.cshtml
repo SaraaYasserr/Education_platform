@@ -1,0 +1,65 @@
+@model LessonCreateViewModel
+@{
+    ViewData["Title"] = "Add Lesson";
+}
+
+<section class="section-top">
+    <div class="container">
+        <div class="col-lg-10 offset-lg-1 text-center">
+            <div class="section-top-title">
+                <h1>Add Lesson @(string.IsNullOrEmpty(Model.CourseTitle) ? "" : $"- {Model.CourseTitle}")</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <form asp-controller="Lesson" asp-action="Create" method="post">
+                    <input type="hidden" asp-for="CourseId" />
+                    <input type="hidden" asp-for="CourseTitle" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Title" class="form-label"></label>
+                        <input asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Content" class="form-label"></label>
+                        <textarea asp-for="Content" rows="5" class="form-control"></textarea>
+                        <span asp-validation-for="Content" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="VideoUrl" class="form-label"></label>
+                        <input asp-for="VideoUrl" class="form-control" placeholder="https://www.youtube.com/embed/..." />
+                        <span asp-validation-for="VideoUrl" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 form-group mb-3">
+                            <label asp-for="LessonOrder" class="form-label"></label>
+                            <input asp-for="LessonOrder" class="form-control" />
+                            <span asp-validation-for="LessonOrder" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group mb-3">
+                            <label asp-for="DurationMinutes" class="form-label"></label>
+                            <input asp-for="DurationMinutes" class="form-control" />
+                            <span asp-validation-for="DurationMinutes" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn_one">Add Lesson</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,32 @@
+@model MySubscriptionViewModel
+@{
+    ViewData["Title"] = "My Subscription";
+}
+
+<section class="section-top">
+    <div class="container">
+        <div class="col-lg-10 offset-lg-1 text-center">
+            <div class="section-top-title">
+                <h1>My Subscription</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding text-center">
+    <div class="container">
+        @if (Model.HasActiveSubscription)
+        {
+            <h3>You're subscribed to the @Model.PlanName plan</h3>
+            <p class="text-muted">
+                Started: @Model.StartDate?.ToString("MMM dd, yyyy") &middot;
+                Renews/Expires: @Model.EndDate?.ToString("MMM dd, yyyy")
+            </p>
+        }
+        else
+        {
+            <p>You don't have an active subscription.</p>
+            <a asp-controller="Membership" asp-action="Pricing" class="btn_one">View Plans</a>
+        }
+    </div>
+</section>

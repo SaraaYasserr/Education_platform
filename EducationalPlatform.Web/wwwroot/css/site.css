@@ -1,0 +1,66 @@
+/* Minimal custom additions on top of the Eduleb template styling.
+   Kept deliberately small - the goal is to preserve the original design. */
+
+.rating-stars {
+    color: #f5a623;
+}
+
+.rating-stars .far {
+    color: #d8d8d8;
+}
+
+.badge-status-active {
+    background-color: #28c76f;
+}
+
+.badge-status-cancelled {
+    background-color: #ea5455;
+}
+
+.badge-status-completed {
+    background-color: #00cfe8;
+}
+
+.progress-thin {
+    height: 8px;
+}
+
+.dashboard-stat-card {
+    border-radius: 10px;
+    padding: 24px;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    margin-bottom: 24px;
+}
+
+.dashboard-stat-card h3 {
+    font-size: 28px;
+    margin-bottom: 4px;
+}
+
+.dashboard-stat-card span {
+    color: #777;
+    font-size: 14px;
+}
+
+.star-rating-input {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    gap: 4px;
+}
+
+.star-rating-input input {
+    display: none;
+}
+
+.star-rating-input label {
+    cursor: pointer;
+    font-size: 24px;
+    color: #d8d8d8;
+}
+
+.star-rating-input input:checked ~ label,
+.star-rating-input label:hover,
+.star-rating-input label:hover ~ label {
+    color: #f5a623;
+}

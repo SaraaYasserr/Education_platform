@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!-- Needed because ApplicationUser : IdentityUser (in Entities/ApplicationUser.cs)
+       requires the Identity types. Using the NuGet package (not a
+       FrameworkReference) here, since this library doesn't need any other
+       ASP.NET Core types and this is the more standard, narrower dependency. -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.10" />
+  </ItemGroup>
+
+</Project>

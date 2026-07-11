@@ -1,0 +1,84 @@
+@model MyCoursesViewModel
+@{
+    ViewData["Title"] = "My Courses";
+}
+
+<section class="section-top">
+    <div class="container">
+        <div class="col-lg-10 offset-lg-1 text-center">
+            <div class="section-top-title">
+                <h1>My Courses</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+
+        <h4>Active Courses (@Model.ActiveEnrollments.Count)</h4>
+        @if (Model.ActiveEnrollments.Any())
+        {
+            <div class="row mb-5">
+                @foreach (var e in Model.ActiveEnrollments)
+                {
+                    <div class="col-lg-4 col-sm-6 col-xs-12 mb-4">
+                        <div class="single_course">
+                            <div class="single_c_img">
+                                <a asp-controller="Course" asp-action="Details" asp-route-id="@e.CourseId">
+                                    <img src="@(string.IsNullOrEmpty(e.CourseImageUrl) ? "/assets/img/course/1.png" : e.CourseImageUrl)" class="img-fluid" alt="@e.CourseTitle" />
+                                </a>
+                                <span class="badge-status-active">Active</span>
+                            </div>
+                            <h4><a asp-controller="Course" asp-action="Details" asp-route-id="@e.CourseId">@e.CourseTitle</a></h4>
+                            <p class="mb-1">Instructor: @e.InstructorName</p>
+                            <div class="progress progress-thin mb-2">
+                                <div class="progress-bar" role="progressbar" style="width:@(e.ProgressPercentage)%"></div>
+                            </div>
+                            <p class="small text-muted">@e.ProgressPercentage% complete</p>
+                            <form asp-controller="Enrollment" asp-action="Cancel" method="post" onsubmit="return confirm('Cancel this enrollment?');">
+                                <input type="hidden" name="courseId" value="@e.CourseId" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Cancel Enrollment</button>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="mb-5">You're not enrolled in any active courses. <a asp-controller="Course" asp-action="Index">Browse courses</a> to get started.</p>
+        }
+
+        @if (Model.CompletedEnrollments.Any())
+        {
+            <h4>Completed Courses (@Model.CompletedEnrollments.Count)</h4>
+            <div class="row mb-5">
+                @foreach (var e in Model.CompletedEnrollments)
+                {
+                    <div class="col-lg-4 col-sm-6 col-xs-12 mb-4">
+                        <div class="single_course">
+                            <div class="single_c_img">
+                                <img src="@(string.IsNullOrEmpty(e.CourseImageUrl) ? "/assets/img/course/1.png" : e.CourseImageUrl)" class="img-fluid" alt="@e.CourseTitle" />
+                                <span class="badge-status-completed">Completed</span>
+                            </div>
+                            <h4>@e.CourseTitle</h4>
+                            <p class="mb-1">Instructor: @e.InstructorName</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        @if (Model.CancelledEnrollments.Any())
+        {
+            <h4>Cancelled (@Model.CancelledEnrollments.Count)</h4>
+            <ul class="list-unstyled">
+                @foreach (var e in Model.CancelledEnrollments)
+                {
+                    <li class="text-muted">@e.CourseTitle</li>
+                }
+            </ul>
+        }
+    </div>
+</section>

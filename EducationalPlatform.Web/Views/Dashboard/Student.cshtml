@@ -1,0 +1,72 @@
+@model StudentDashboardViewModel
+@{
+    ViewData["Title"] = "My Dashboard";
+}
+
+<section class="section-top">
+    <div class="container">
+        <div class="col-lg-10 offset-lg-1 text-center">
+            <div class="section-top-title">
+                <h1>My Dashboard</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-sm-6">
+                <div class="dashboard-stat-card">
+                    <h3>@Model.EnrolledCourseCount</h3>
+                    <span>Enrolled Courses</span>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="dashboard-stat-card">
+                    <h3>@Model.CompletedCourseCount</h3>
+                    <span>Completed Courses</span>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="dashboard-stat-card">
+                    <h3>@Model.AverageProgress.ToString("0")%</h3>
+                    <span>Average Progress</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <a asp-controller="Enrollment" asp-action="MyCourses" class="btn_one">View All My Courses</a>
+            <a asp-controller="Course" asp-action="Index" class="btn_two ms-2">Browse More Courses</a>
+        </div>
+
+        <h4>My Courses</h4>
+        @if (Model.MyCourses.Any())
+        {
+            <div class="row">
+                @foreach (var c in Model.MyCourses)
+                {
+                    <div class="col-lg-4 col-sm-6 mb-4">
+                        <div class="single_course">
+                            <div class="single_c_img">
+                                <a asp-controller="Course" asp-action="Details" asp-route-id="@c.CourseId">
+                                    <img src="@(string.IsNullOrEmpty(c.CourseImageUrl) ? "/assets/img/course/1.png" : c.CourseImageUrl)" class="img-fluid" alt="@c.CourseTitle" />
+                                </a>
+                            </div>
+                            <h4><a asp-controller="Course" asp-action="Details" asp-route-id="@c.CourseId">@c.CourseTitle</a></h4>
+                            <div class="progress progress-thin mb-1">
+                                <div class="progress-bar" role="progressbar" style="width:@(c.ProgressPercentage)%"></div>
+                            </div>
+                            <p class="small text-muted">@c.ProgressPercentage% complete</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-muted">You're not enrolled in any courses yet. <a asp-controller="Course" asp-action="Index">Browse courses</a> to get started.</p>
+        }
+    </div>
+</section>

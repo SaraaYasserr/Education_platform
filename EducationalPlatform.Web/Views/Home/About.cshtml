@@ -1,0 +1,81 @@
+@{
+    ViewData["Title"] = "About Us";
+}
+
+<section class="section-top">
+    <div class="container">
+        <div class="col-lg-10 offset-lg-1 text-center">
+            <div class="section-top-title">
+                <h1>About</h1>
+                <ul>
+                    <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li> / About</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="top_cat__area section-padding" style="background-image: url(/assets/img/bg/shape-1.png); background-size:cover; background-position: center center;">
+    <div class="container">
+        <div class="section-title text-center">
+            <h2>Start your journey With us</h2>
+            <p>We offer a brand new approach to the most basic learning paradigms. Choose from a wide range of learning options and gain new skills.</p>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-sm-6 col-xs-12">
+                <div class="single_tp">
+                    <span class="sc_one">01</span>
+                    <h3>Expert <br />Teacher</h3>
+                    <p>Learn from instructors with real-world, hands-on experience in their fields.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 col-xs-12">
+                <div class="single_tp">
+                    <span class="sc_two">02</span>
+                    <h3>Quality <br />Education</h3>
+                    <p>Structured courses designed to take you from beginner to confident practitioner.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 col-xs-12">
+                <div class="single_tp">
+                    <span class="sc_three">03</span>
+                    <h3>Remote <br />Learning</h3>
+                    <p>Study at your own pace, anywhere, with lessons available online 24/7.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 col-xs-12">
+                <div class="single_tp">
+                    <span class="sc_four">04</span>
+                    <h3>Life Time <br />Support</h3>
+                    <p>Get continued access to course materials and instructor support.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ab_area section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-sm-12 col-xs-12">
+                <div class="ab_img">
+                    <img src="~/assets/img/about1.png" class="img-fluid" alt="About our platform">
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-12 col-xs-12">
+                <div class="ab_content">
+                    <h2>We Are Providing Online Courses To The Global World</h2>
+                    <p>Our platform connects students with instructors across a wide range of subjects, from technical skills to creative disciplines.</p>
+                    <p>Whether you're starting from scratch or sharpening existing skills, we have a course path for you.</p>
+                    <ul>
+                        <li><span class="ti-check"></span> Get access to a growing catalog of courses</li>
+                        <li><span class="ti-check"></span> Learn at your own pace, on your own schedule</li>
+                        <li><span class="ti-check"></span> Find the right instructor for you</li>
+                    </ul>
+                    <a class="btn_one" asp-controller="Course" asp-action="Index">View All Courses <i class="ti-arrow-top-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

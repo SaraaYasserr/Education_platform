@@ -1,0 +1,138 @@
+﻿@model EducationalPlatform.Models.ViewModels.Payment.PaymentViewModel
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-7">
+
+            <div class="card shadow">
+
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+
+                    <h3 class="mb-0">Checkout</h3>
+
+                    @if (Model.IsSubscription)
+                    {
+                        <a asp-controller="Membership"
+                           asp-action="Pricing"
+                           class="text-white fs-4 text-decoration-none">
+                            <i class="bi bi-x-circle-fill"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Course"
+                           asp-action="Details"
+                           asp-route-id="@Model.CourseId"
+                           class="text-white fs-4 text-decoration-none">
+                            <i class="bi bi-x-circle-fill"></i>
+                        </a>
+                    }
+
+                </div>
+
+                @* <div class="card-header bg-primary text-white"> *@
+                @*     <h3 class="mb-0">Checkout</h3> *@
+                @* </div> *@
+
+                <div class="card-body">
+
+                    <div class="alert alert-info">
+
+                        <h5>@Model.ItemName</h5>
+
+                        <h3 class="text-success">
+                            $@Model.Amount
+                        </h3>
+
+                    </div>
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <form asp-action="Checkout" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Card Holder Name
+                            </label>
+
+                            <input asp-for="CardHolderName"
+                                   class="form-control" />
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Card Number
+                            </label>
+
+                            <input asp-for="CardNumber"
+                                   class="form-control"
+                                   placeholder="1234 5678 9012 3456" />
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Expiry Date
+                                </label>
+
+                                <input asp-for="ExpiryDate"
+                                       class="form-control"
+                                       placeholder="MM/YY" />
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    CVV
+                                </label>
+
+                                <input asp-for="CVV"
+                                       class="form-control"
+                                       placeholder="123" />
+
+                            </div>
+
+                        </div>
+
+                        <input asp-for="CourseId" type="hidden" />
+
+                        <input asp-for="PlanId" type="hidden" />
+
+                        <input asp-for="IsSubscription" type="hidden" />
+
+                        <input asp-for="ItemName" type="hidden" />
+
+                        <input asp-for="Amount" type="hidden" />
+
+                        <div class="mt-4">
+
+                            <button class="btn btn-success w-100">
+
+                                Pay Now
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

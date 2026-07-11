@@ -1,0 +1,59 @@
+@model List<EnrollmentViewModel>
+@{
+    ViewData["Title"] = "Enrolled Students";
+    var courseId = (int)ViewBag.CourseId;
+}
+
+<section class="section-top">
+    <div class="container">
+        <div class="col-lg-10 offset-lg-1 text-center">
+            <div class="section-top-title">
+                <h1>Enrolled Students @(Model.Any() ? $"- {Model.First().CourseTitle}" : "")</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <a asp-controller="Course" asp-action="Edit" asp-route-id="@courseId" class="btn_two mb-4 d-inline-block">&larr; Back to Course</a>
+
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Email</th>
+                            <th>Enrolled On</th>
+                            <th>Status</th>
+                            <th>Progress</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var s in Model)
+                        {
+                            <tr>
+                                <td>@s.StudentName</td>
+                                <td>@s.StudentEmail</td>
+                                <td>@s.EnrollmentDate.ToString("MMM dd, yyyy")</td>
+                                <td>@s.Status</td>
+                                <td>
+                                    <div class="progress progress-thin" style="width:120px;">
+                                        <div class="progress-bar" role="progressbar" style="width:@(s.ProgressPercentage)%"></div>
+                                    </div>
+                                    <span class="small">@s.ProgressPercentage%</span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p>No students have enrolled in this course yet.</p>
+        }
+    </div>
+</section>

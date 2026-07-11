@@ -1,0 +1,88 @@
+@model CourseEditViewModel
+@{
+    ViewData["Title"] = "Edit Course";
+}
+
+<section class="section-top">
+    <div class="container">
+        <div class="col-lg-10 offset-lg-1 text-center">
+            <div class="section-top-title">
+                <h1>Edit Course</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                @if (!string.IsNullOrEmpty(Model.ExistingImageUrl))
+                {
+                    <img src="@Model.ExistingImageUrl" class="img-fluid mb-3 rounded" style="max-height:220px;object-fit:cover;" alt="Current course image" />
+                }
+
+                <form asp-controller="Course" asp-action="Edit" method="post" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="ExistingImageUrl" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Title" class="form-label"></label>
+                        <input asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Description" class="form-label"></label>
+                        <textarea asp-for="Description" rows="5" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 form-group mb-3">
+                            <label asp-for="Price" class="form-label"></label>
+                            <input asp-for="Price" class="form-control" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group mb-3">
+                            <label asp-for="CategoryId" class="form-label"></label>
+                            <select asp-for="CategoryId" class="form-select" asp-items="@(new SelectList(Model.AvailableCategories, "Id", "Name"))"></select>
+                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 form-group mb-3">
+                            <label asp-for="DurationMinutes" class="form-label"></label>
+                            <input asp-for="DurationMinutes" class="form-control" />
+                            <span asp-validation-for="DurationMinutes" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group mb-3">
+                            <label asp-for="SeatsAvailable" class="form-label"></label>
+                            <input asp-for="SeatsAvailable" class="form-control" />
+                            <span asp-validation-for="SeatsAvailable" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="imageFile" class="form-label">Replace Course Image</label>
+                        <input id="imageFile" name="imageFile" type="file" accept="image/*" class="form-control" />
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input asp-for="IsPublished" class="form-check-input" />
+                        <label asp-for="IsPublished" class="form-check-label"></label>
+                    </div>
+
+                    <button type="submit" class="btn_one">Save Changes</button>
+                    <a asp-controller="Lesson" asp-action="Index" asp-route-courseId="@Model.Id" class="btn_two ms-2">Manage Lessons</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,69 @@
+@model List<InstructorListItemViewModel>
+@{
+    ViewData["Title"] = "Instructors";
+}
+
+<section class="section-top">
+    <div class="container">
+        <div class="col-lg-10 offset-lg-1 text-center">
+            <div class="section-top-title">
+                <h1>Our Instructors</h1>
+                <ul>
+                    <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li> / Instructor</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="team_area section-padding">
+    <div class="container">
+        <div class="section-title text-center">
+            <h2>Meet our Instructors</h2>
+            <p>Learn from experienced instructors who are passionate about helping you grow.</p>
+        </div>
+        <div class="row">
+            @if (Model.Any())
+            {
+                foreach (var instructor in Model)
+                {
+                    <div class="col-lg-3 col-sm-6 col-xs-12">
+                        <div class="our-team">
+                            <div class="team-content">
+                                <a asp-controller="Instructor" asp-action="Details" asp-route-id="@instructor.Id">
+                                    <img src="@(string.IsNullOrEmpty(instructor.ProfileImage) ? "/assets/img/team/team1.jpg" : instructor.ProfileImage)" alt="@instructor.FullName">
+                                    @* @{ *@
+                                    @*     string image = instructor.FullName switch *@
+                                    @*     { *@
+                                    @*         "Manwella Emad" => "/assets/img/team/manwella.jpg", *@
+                                    @*         "Radwa Abd Elmonem" => "/assets/img/team/radwa.jpg", *@
+                                    @*         "Shaza Ashraf" => "/assets/img/team/shaza.jpg", *@
+                                    @*         _ => "/assets/img/team/team1.jpg" *@
+                                    @*     }; *@
+                                    @* } *@
+
+                                    @* <img src="@image" alt="@instructor.FullName"> *@
+                                </a>
+                            </div>
+                            <div class="team-prof">
+                                <h3><a asp-controller="Instructor" asp-action="Details" asp-route-id="@instructor.Id">@instructor.FullName</a></h3>
+                                <span>Instructor</span>
+                            </div>
+                            <div class="sth_det2">
+                                <span class="ti-file"> <u>@instructor.CourseCount Course@(instructor.CourseCount == 1 ? "" : "s")</u></span>
+                                <span class="ti-user"> <u>@instructor.StudentCount Student@(instructor.StudentCount == 1 ? "" : "s")</u></span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center">
+                    <p>No instructors found.</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>

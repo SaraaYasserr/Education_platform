@@ -1,0 +1,71 @@
+@model InstructorDetailsViewModel
+@{
+    ViewData["Title"] = Model.FullName;
+}
+
+<section class="section-top">
+    <div class="container">
+        <div class="col-lg-10 offset-lg-1 text-center">
+            <div class="section-top-title">
+                <h1>@Model.FullName</h1>
+                <ul>
+                    <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li><a asp-controller="Instructor" asp-action="Index"> / Instructor</a></li>
+                    <li> / @Model.FullName</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="template_agent section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-sm-12 col-xs-12">
+                <div class="single_agent">
+                    <div class="single_agent_image">
+                        <img src="@(string.IsNullOrEmpty(Model.ProfileImage) ? "/assets/img/team/team1.jpg" : Model.ProfileImage)" class="img-fluid" alt="@Model.FullName" />
+                    </div>
+                    <div class="single_agent_content">
+                        <h4>@Model.FullName</h4>
+                        <h5>Instructor</h5>
+                        <p>@Model.CourseCount published course@(Model.CourseCount == 1 ? "" : "s") &middot; @Model.StudentCount student@(Model.StudentCount == 1 ? "" : "s") taught</p>
+                        <ul>
+                            @if (!string.IsNullOrEmpty(Model.Email))
+                            {
+                                <li><i class="fa fa-envelope-o"></i>@Model.Email</li>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.PhoneNumber))
+                            {
+                                <li><i class="fa fa-phone"></i>@Model.PhoneNumber</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="course_area section-padding">
+    <div class="container">
+        <div class="section-title text-center">
+            <h2>Courses by @Model.FullName</h2>
+        </div>
+        <div class="row">
+            @if (Model.Courses.Any())
+            {
+                foreach (var course in Model.Courses)
+                {
+                    @await Html.PartialAsync("Partials/_CourseCard", course)
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center">
+                    <p>This instructor hasn't published any courses yet.</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>

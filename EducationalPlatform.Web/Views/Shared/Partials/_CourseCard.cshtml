@@ -1,0 +1,17 @@
+@model CourseListItemViewModel
+
+<div class="col-lg-4 col-sm-6 col-xs-12">
+    <div class="single_course">
+        <div class="single_c_img">
+            <a asp-controller="Course" asp-action="Details" asp-route-id="@Model.Id">
+                <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "/assets/img/course/1.png" : Model.ImageUrl)" class="img-fluid" alt="@Model.Title" />
+            </a>
+            <span>@Model.CategoryName</span>
+        </div>
+        @await Html.PartialAsync("Partials/_StarRating", Model.AverageRating)
+        <h4><a asp-controller="Course" asp-action="Details" asp-route-id="@Model.Id">@Model.Title</a></h4>
+        <p><span class="ti-book"> </span> @Model.LessonCount Lessons</p>
+        <p><span class="ti-alarm-clock"> </span>@Model.DurationMinutes Min</p>
+        <div class="price">@(Model.Price == 0 ? "Free" : $"Course Fee - {Model.Price:0}$")</div>
+    </div>
+</div>

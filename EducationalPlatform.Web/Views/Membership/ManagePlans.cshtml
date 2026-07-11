@@ -1,0 +1,54 @@
+@model List<SubscriptionPlanViewModel>
+@{
+    ViewData["Title"] = "Manage Plans";
+}
+
+<section class="section-top">
+    <div class="container">
+        <div class="col-lg-10 offset-lg-1 text-center">
+            <div class="section-top-title">
+                <h1>Manage Subscription Plans</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="mb-0">@Model.Count Plan(s)</h4>
+            <a asp-controller="Membership" asp-action="CreatePlan" class="btn_one">+ Add Plan</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Duration (days)</th>
+                        <th>Featured</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var plan in Model)
+                    {
+                        <tr>
+                            <td>@plan.Name</td>
+                            <td>@(plan.Price == 0 ? "Free" : $"${plan.Price:0}")</td>
+                            <td>@plan.DurationInDays</td>
+                            <td>@(plan.IsFeatured ? "Yes" : "No")</td>
+                            <td>
+                                <a asp-controller="Membership" asp-action="EditPlan" asp-route-id="@plan.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                                <form asp-controller="Membership" asp-action="DeletePlan" asp-route-id="@plan.Id" method="post" class="d-inline" onsubmit="return confirm('Delete this plan?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

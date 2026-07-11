@@ -1,0 +1,332 @@
+@model CourseDetailsViewModel
+@{
+    ViewData["Title"] = Model.Title;
+    var showProgress = Model.IsCurrentUserEnrolled && User.IsInRole(Roles.Student);
+}
+
+<section class="section-top">
+    <div class="container">
+        <div class="col-lg-10 offset-lg-1 text-center">
+            <div class="section-top-title">
+                <h1>@Model.Title</h1>
+                <ul>
+                    <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li><a asp-controller="Course" asp-action="Index"> / Course</a></li>
+                    <li> / @Model.Title</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="course_single section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-sm-12 col-xs-12">
+                <div class="course_single_thumb">
+                    <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "/assets/img/course/1.png" : Model.ImageUrl)" class="img-fluid" alt="@Model.Title">
+                </div>
+
+                @if (showProgress)
+                {
+                    <div class="course-progress-box mt-4 p-3" style="border:1px solid #eee; border-radius:8px;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <strong>Your Progress</strong>
+                            <span>@Model.ProgressPercentage%</span>
+                        </div>
+                        <div class="progress" style="height:10px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width:@(Model.ProgressPercentage)%;"
+                                 aria-valuenow="@Model.ProgressPercentage" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+
+                        @if (Model.HasCertificate)
+                        {
+                            <div class="alert alert-success d-flex justify-content-between align-items-center mt-3 mb-0">
+                                <span>🏆 You completed this course!</span>
+                                <a asp-controller="Certificate" asp-action="View" asp-route-courseId="@Model.Id" class="btn_one btn-sm">View Certificate</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="small text-muted mb-0 mt-2">Check off each lesson below as you finish it. Complete every lesson to earn your certificate!</p>
+                        }
+                    </div>
+                }
+
+                <div class="course_single_content">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a href="#overview" class="nav-link active" data-bs-toggle="tab">Overview</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#curriculum" class="nav-link" data-bs-toggle="tab">Curriculum</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#instructor" class="nav-link" data-bs-toggle="tab">Instructor</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#reviews" class="nav-link" data-bs-toggle="tab">Reviews (@Model.ReviewCount)</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="myTabContent">
+
+                        <!-- OVERVIEW -->
+                        <div class="tab-pane show fade active" id="overview">
+                            <h4>Course Description</h4>
+                            <p>@Model.Description</p>
+                            <ul class="course-meta-list">
+                                <li><span class="ti-book"></span> @Model.Lessons.Count Lessons</li>
+                                <li><span class="ti-alarm-clock"></span> @Model.DurationMinutes Minutes Total</li>
+                                <li><span class="ti-user"></span> @Model.EnrollmentCount Students Enrolled</li>
+                            </ul>
+                        </div>
+
+                        <!-- CURRICULUM -->
+                        <div class="tab-pane fade" role="tabpanel" id="curriculum">
+                            @if (Model.Lessons.Any())
+                            {
+                                <ul class="curriculum-list list-unstyled">
+                                    @foreach (var lesson in Model.Lessons)
+                                    {
+                                        var isDone = Model.CompletedLessonIds.Contains(lesson.Id);
+                                        <li class="d-flex justify-content-between align-items-center border-bottom py-3">
+                                            <div>
+                                                @if (showProgress)
+                                                {
+                                                    <form asp-controller="Enrollment"
+                                                          asp-action="ToggleLessonComplete"
+                                                          method="post"
+                                                          class="d-inline-block me-2 align-middle">
+
+                                                        @Html.AntiForgeryToken()
+
+                                                        <input type="hidden" name="lessonId" value="@lesson.Id" />
+                                                        <input type="hidden" name="courseId" value="@Model.Id" />
+
+                                                        @if (isDone)
+
+                                                        {
+                                                            <input type="hidden" name="isCompleted" value="false" />
+                                                        }
+
+                                                        else
+
+                                                        {
+                                                            <input type="hidden" name="isCompleted" value="true" />
+                                                        }
+
+                                                        <button type="submit"
+                                                                class="btn btn-sm @(isDone ? "btn-success" : "btn-outline-secondary")">
+                                                            @(isDone ? "✓ Done" : "Mark Complete")
+                                                        </button>
+
+                                                    </form>
+                                                }
+                                                <span class="ti-control-play me-2"></span>
+                                                <strong>@lesson.LessonOrder. @lesson.Title</strong>
+                                                @if (Model.IsCurrentUserEnrolled && !string.IsNullOrEmpty(lesson.VideoUrl))
+                                                {
+                                                    <div class="ratio ratio-16x9 mt-2" style="max-width:480px;">
+                                                        <iframe src="@lesson.VideoUrl" allowfullscreen></iframe>
+                                                    </div>
+                                                }
+                                                <p class="mb-0 text-muted small mt-1">@lesson.Content</p>
+                                            </div>
+                                            <span class="text-muted">@lesson.DurationMinutes min</span>
+                                        </li>
+                                    }
+                                </ul>
+                                @if (!Model.IsCurrentUserEnrolled)
+                                {
+                                    <p class="text-muted mt-3"><em>Enroll in this course to unlock lesson videos.</em></p>
+                                }
+                            }
+                            else
+                            {
+                                <p>No lessons have been added to this course yet.</p>
+                            }
+                        </div>
+
+                        <!-- INSTRUCTOR -->
+                        <div class="tab-pane fade" id="instructor">
+                            <div class="overview">
+                                <div class="instructor-item text-center">
+
+                                    <div class="instructor-thumb mb-4">
+                                        <a asp-controller="Instructor"
+                                           asp-action="Details"
+                                           asp-route-id="@Model.InstructorId">
+                                            <img src="@(string.IsNullOrEmpty(Model.InstructorImage) ? "/assets/img/ins-details.png" : Model.InstructorImage)"
+                                                 alt="@Model.InstructorName"
+                                                 class="img-fluid rounded-circle"
+                                                 style="width:220px;height:220px;object-fit:cover;">
+                                        </a>
+                                    </div>
+
+                                    <div class="instructor-content">
+                                        <h4 class="mb-2">
+                                            <a asp-controller="Instructor"
+                                               asp-action="Details"
+                                               asp-route-id="@Model.InstructorId">
+                                                @Model.InstructorName
+                                            </a>
+                                        </h4>
+
+                                        <p class="text-uppercase text-muted mb-3">
+                                            Instructor
+                                        </p>
+
+                                        <p class="mb-4">
+                                            @(string.IsNullOrWhiteSpace(Model.InstructorBio)
+                                                ? "This instructor hasn't added a bio yet."
+                                                : Model.InstructorBio)
+                                        </p>
+
+                                        <a asp-controller="Instructor"
+                                           asp-action="Details"
+                                           asp-route-id="@Model.InstructorId"
+                                           class="btn_one">
+                                            View Full Profile
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- REVIEWS -->
+                        <div class="tab-pane fade" id="reviews">
+                            <div class="client-review">
+                                @if (Model.Reviews.Any())
+                                {
+                                    foreach (var review in Model.Reviews)
+                                    {
+                                        <div class="single-review d-flex mb-4">
+                                            <img src="@(string.IsNullOrEmpty(review.StudentImage) ? "/assets/img/team/team1.jpg" : review.StudentImage)" class="rounded-circle me-3" width="60" height="60" alt="@review.StudentName">
+                                            <div>
+                                                <h6 class="mb-1">@review.StudentName</h6>
+                                                @await Html.PartialAsync("Partials/_StarRating", (double)review.Rating)
+                                                <p class="mt-2 mb-0">@review.Comment</p>
+                                                <span class="text-muted small">@review.CreatedAt.ToString("MMM dd, yyyy")</span>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <p>No reviews yet. Be the first to review this course!</p>
+                                }
+                            </div>
+
+                            @if (User.Identity?.IsAuthenticated == true && User.IsInRole(Roles.Student))
+                            {
+                                if (Model.IsCurrentUserEnrolled)
+                                {
+                                    <div class="add-review mt-5">
+                                        <h4>Add a Review</h4>
+                                        <form asp-controller="Review" asp-action="Create" method="post">
+                                            <input type="hidden" name="CourseId" value="@Model.Id" />
+                                            <div class="mb-3">
+                                                <label class="form-label d-block">Your Rating</label>
+                                                <div class="star-rating-input">
+                                                    <input type="radio" id="star5" name="Rating" value="5"><label for="star5">★</label>
+                                                    <input type="radio" id="star4" name="Rating" value="4"><label for="star4">★</label>
+                                                    <input type="radio" id="star3" name="Rating" value="3"><label for="star3">★</label>
+                                                    <input type="radio" id="star2" name="Rating" value="2"><label for="star2">★</label>
+                                                    <input type="radio" id="star1" name="Rating" value="1"><label for="star1">★</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Your Review</label>
+                                                <textarea name="Comment" rows="4" class="form-control" placeholder="Share your thoughts about this course..."></textarea>
+                                            </div>
+                                            <button type="submit" class="btn_one mt-3">Submit Review</button>
+                                        </form>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p class="text-muted mt-4"><em>Only enrolled students can leave a review for this course.</em></p>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIDEBAR -->
+            <div class="col-lg-4 col-sm-12 col-xs-12">
+                <div class="course_single_sidebar">
+                    <div class="csb_price">
+                        <h3>@(Model.Price == 0 ? "Free" : $"${Model.Price:0}")</h3>
+                    </div>
+                    <ul class="csb_features">
+                        <li><span class="ti-book"></span> Lessons <span class="float-end">@Model.Lessons.Count</span></li>
+                        <li><span class="ti-alarm-clock"></span> Duration <span class="float-end">@Model.DurationMinutes min</span></li>
+                        <li><span class="ti-user"></span> Enrolled <span class="float-end">@Model.EnrollmentCount</span></li>
+                        <li><span class="ti-medall"></span> Seats <span class="float-end">@(Model.SeatsAvailable.HasValue ? Model.SeatsAvailable.ToString() : "Unlimited")</span></li>
+                    </ul>
+
+                    @if (User.Identity?.IsAuthenticated != true)
+                    {
+                        <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("Details", "Course", new { id = Model.Id })" class="btn_one w-100 text-center">Sign In to Enroll</a>
+                    }
+                    else if (User.IsInRole(Roles.Student))
+                    {
+                        if (Model.IsCurrentUserEnrolled)
+                        {
+                            @if (Model.HasCertificate)
+                            {
+                                <a asp-controller="Certificate" asp-action="View" asp-route-courseId="@Model.Id" class="btn_one w-100 text-center d-block mb-2">🏆 View Certificate</a>
+                            }
+                            <form asp-controller="Enrollment" asp-action="Cancel" method="post">
+                                <input type="hidden" name="courseId" value="@Model.Id" />
+                                <button type="submit" class="btn_one w-100">Cancel Enrollment</button>
+                            </form>
+                        }
+                        else if (Model.CanEnroll)
+                        {
+                            <form asp-controller="Payment" asp-action="Checkout" method="get">
+                                <input type="hidden" name="courseId" value="@Model.Id" />
+                                <button type="submit" class="btn_one w-100">
+                                    Register Today
+                                </button>
+                            </form>
+                            @* <form asp-controller="Enrollment" asp-action="Enroll" method="post"> *@
+                            @*     <input type="hidden" name="courseId" value="@Model.Id" /> *@
+                            @*     <button type="submit" class="btn_one w-100">Register Today</button> *@
+                            @* </form> *@
+                        }
+                        else
+                        {
+                            <button class="btn_one w-100" disabled>Course Full</button>
+                        }
+                    }
+
+                    <div class="categories-list mt-4">
+                        <h5>Category</h5>
+                        <p><a asp-controller="Course" asp-action="Index" asp-route-CategoryId="@Model.CategoryId">@Model.CategoryName</a></p>
+                    </div>
+                </div>
+
+                @if (Model.RelatedCourses.Any())
+                {
+                    <div class="related-courses mt-4">
+                        <h5>Related Courses</h5>
+                        @foreach (var related in Model.RelatedCourses)
+                        {
+                            <div class="related-course-item d-flex mb-3">
+                                <img src="@(string.IsNullOrEmpty(related.ImageUrl) ? "/assets/img/course/1.png" : related.ImageUrl)" width="70" height="60" style="object-fit:cover;" class="me-2" alt="@related.Title">
+                                <div>
+                                    <a asp-controller="Course" asp-action="Details" asp-route-id="@related.Id" class="d-block">@related.Title</a>
+                                    <span class="text-muted small">@(related.Price == 0 ? "Free" : $"${related.Price:0}")</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
